@@ -3,7 +3,8 @@ from app import app, db
 from models import Transaction, FraudAlert
 from forms import TransactionForm
 from fraud_detector import fraud_detector
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+IST = timezone(timedelta(hours=5, minutes=30))
 from sqlalchemy import desc, func
 import logging
 
@@ -79,7 +80,8 @@ def test_transaction():
             'location': form.location.data or '',
             'device_id': form.device_id.data or '',
             'merchant_category': form.merchant_category.data or 'OTHER',
-            'timestamp': datetime.utcnow()
+            'timestamp': datetime.now(IST)
+
         }
         
         # Run fraud detection

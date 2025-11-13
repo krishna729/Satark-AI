@@ -1,6 +1,7 @@
 from extensions import db
 from datetime import datetime
 from sqlalchemy import func
+from datetime import datetime, timezone, timedelta
 
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -8,7 +9,11 @@ class Transaction(db.Model):
     sender_id = db.Column(db.String(50), nullable=False)
     receiver_id = db.Column(db.String(50), nullable=False)
     transaction_type = db.Column(db.String(20), nullable=False)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    IST = timezone(timedelta(hours=5, minutes=30))
+
+    timestamp = db.Column(db.DateTime, default=lambda: datetime.now(IST))
+
     is_fraud = db.Column(db.Boolean, default=False)
     risk_score = db.Column(db.Float, default=0.0)
     location = db.Column(db.String(100))

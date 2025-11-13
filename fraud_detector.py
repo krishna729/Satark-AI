@@ -3,7 +3,9 @@ import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.model_selection import train_test_split
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+IST = timezone(timedelta(hours=5, minutes=30))
+
 import joblib
 import os
 import logging
@@ -131,7 +133,7 @@ class FraudDetector:
             if 'timestamp' in transaction_data:
                 timestamp = pd.to_datetime(transaction_data['timestamp'])
             else:
-                timestamp = datetime.now()
+                timestamp = datetime.now(IST)
             
             df['hour'] = timestamp.hour
             df['day_of_week'] = timestamp.weekday()
@@ -161,7 +163,7 @@ class FraudDetector:
         reasons = []
         
         amount = transaction_data.get('amount', 0)
-        hour = datetime.now().hour if 'timestamp' not in transaction_data else pd.to_datetime(transaction_data['timestamp']).hour
+        hour = datetime.now(IST).hour if 'timestamp' not in transaction_data else pd.to_datetime(transaction_data['timestamp']).hour
         
         if amount > 50000:
             reasons.append("Very high transaction amount")
